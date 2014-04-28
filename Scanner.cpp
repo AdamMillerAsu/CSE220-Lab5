@@ -86,7 +86,7 @@ Token* Scanner::getToken()
     char *token_ptr = token_string; //write some code to point this to the beginning of token_string
     Token *new_token = new Token();
     
-    new_token->setType(NO_TYPE);
+   // new_token->setType(NO_TYPE);
     //1.  Skip past all of the blanks
     if (line_ptr == NULL)
     {
