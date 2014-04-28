@@ -4,6 +4,7 @@
 //
 //  Created by Bryce Holton on 3/28/14.
 //  Copyright (c) 2014 Bryce Holton. All rights reserved.
+//	Added to by Daniel Wong and Adam Miller
 //
 
 #include "IdentifierBinaryTree.h"
@@ -37,15 +38,15 @@ void IdentifierBinaryTree::depthFirstDeleteTree(Token *tok)
     }
     delete tok;
 }
-void IdentifierBinaryTree::setTreeRoot(Token *root)
+void IdentifierBinaryTree::setTreeRoot(Identifier *root)
 {
     this->treeRoot = root;
 }
-Token *IdentifierBinaryTree::getTreeRoot()
+Identifier *IdentifierBinaryTree::getTreeRoot()
 {
     return this->treeRoot;
 }
-bool IdentifierBinaryTree::addIdentifier(Token *tok, int lineNum)
+bool IdentifierBinaryTree::addIdentifier(Identifier *id, int lineNum)
 {
     bool success = false;
     LineNumberList *listItem = new LineNumberList();
@@ -53,14 +54,14 @@ bool IdentifierBinaryTree::addIdentifier(Token *tok, int lineNum)
     listItem->setLineNumber(lineNum);
     if (getTreeRoot() == NULL)
     {
-        setTreeRoot(tok);
-        tok->addToLineNumberList(listItem);
+        setTreeRoot(id);
+        id->addToLineNumberList(listItem);
         success = true;
     }
     else
     {
-        string tokenName = tok->getTokenString();
-        Token *parentNode = getTreeRoot();
+        string tokenName = id->getTokenString();
+        Identifier *parentNode = getTreeRoot();
         string treeNodeName;
         int stringComparison;
         
@@ -73,7 +74,7 @@ bool IdentifierBinaryTree::addIdentifier(Token *tok, int lineNum)
                 //They are the same identifier token we just need to add a new line number to the list.
                 parentNode->addToLineNumberList(listItem);
                 parentNode = NULL; //Exit the loop
-                delete tok;         //We won't need tok and it won't be deleted in main.
+                delete id;         //We won't need tok and it won't be deleted in main.
                 success = true;
             }
             else if (stringComparison < 0)
@@ -82,7 +83,7 @@ bool IdentifierBinaryTree::addIdentifier(Token *tok, int lineNum)
                 if (parentNode->getLeftChild() == NULL)
                 {
                     //Add tok to the left
-                    tok->addToLineNumberList(listItem);
+                    id->addToLineNumberList(listItem);
                     parentNode->setLeftChild(tok);
                     parentNode = NULL;
                     success = true;
@@ -98,7 +99,7 @@ bool IdentifierBinaryTree::addIdentifier(Token *tok, int lineNum)
                 if (parentNode->getRightChild() == NULL)
                 {
                     //Add tok to the right
-                    tok->addToLineNumberList(listItem);
+                    id->addToLineNumberList(listItem);
                     parentNode->setRightChild(tok);
                     parentNode = NULL;
                     success = true;
