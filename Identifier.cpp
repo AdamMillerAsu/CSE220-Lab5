@@ -52,7 +52,7 @@ void Identifier::addToLineNumberList(LineNumberList *listItem)
         tmp->setNextLineNumber(listItem);
 	}
 }
-LineNumberList Identifier::*getLineNumberList()
+LineNumberList *Identifier::getLineNumberList()
 {
 	return this->list;
 }
