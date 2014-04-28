@@ -18,25 +18,25 @@ IdentifierBinaryTree::IdentifierBinaryTree()
 }
 IdentifierBinaryTree::~IdentifierBinaryTree()
 {
-    Token *root = getTreeRoot();
+    Identifier *root = getTreeRoot();
     
     if (root != NULL)
     {
         depthFirstDeleteTree(root);
     }
 }
-void IdentifierBinaryTree::depthFirstDeleteTree(Token *tok)
+void IdentifierBinaryTree::depthFirstDeleteTree(Identifier *id)
 {
-    if (tok->getLeftChild() != NULL)
+    if (id->getLeftChild() != NULL)
     {
-        depthFirstDeleteTree(tok->getLeftChild());
+        depthFirstDeleteTree(id->getLeftChild());
     }
 //    cout << tok->getTokenString() << "\n";
-    if (tok->getRightChild() != NULL)
+    if (id->getRightChild() != NULL)
     {
-        depthFirstDeleteTree(tok->getRightChild());
+        depthFirstDeleteTree(id->getRightChild());
     }
-    delete tok;
+    delete id;
 }
 void IdentifierBinaryTree::setTreeRoot(Identifier *root)
 {
@@ -84,7 +84,7 @@ bool IdentifierBinaryTree::addIdentifier(Identifier *id, int lineNum)
                 {
                     //Add tok to the left
                     id->addToLineNumberList(listItem);
-                    parentNode->setLeftChild(tok);
+                    parentNode->setLeftChild(id);
                     parentNode = NULL;
                     success = true;
                 }
@@ -100,7 +100,7 @@ bool IdentifierBinaryTree::addIdentifier(Identifier *id, int lineNum)
                 {
                     //Add tok to the right
                     id->addToLineNumberList(listItem);
-                    parentNode->setRightChild(tok);
+                    parentNode->setRightChild(id);
                     parentNode = NULL;
                     success = true;
                 }
