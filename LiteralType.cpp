@@ -1,7 +1,13 @@
-//
+#include "LiteralType.h"
 
+LiteralType::LiteralType()
+{}
 
+Literal_String::Literal_String()
+{}
 
+Literal_Real::Literal_Real()
+{}
 
-template <class a_type> class LiteralType : Token
-{};
+Literal_Int::Literal_Int()
+{}

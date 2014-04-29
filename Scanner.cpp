@@ -7,6 +7,7 @@
 
 #include "Scanner.h"
 #include "Print.h"
+#include "Token.h"
 
 typedef struct
 {
@@ -204,6 +205,11 @@ void Scanner::getWord(char *str, char *token_ptr, Token *tok)
 }
 void Scanner::getNumber(char *str, char *token_ptr, Token *tok)
 {
+	Literal_Int *litint;
+	Literal_Real *litreal;
+
+	litint = new Literal_Int();
+	litreal = new Literal_Real();
     /*
      Write some code to Extract the number and convert it to a literal number.
      */
@@ -261,13 +267,15 @@ void Scanner::getNumber(char *str, char *token_ptr, Token *tok)
     tok->setCode(NUMBER);
     if (int_type)
     {
-        tok->setType(INTEGER_LIT);
-        tok->setLiteral((int)atoi(str));
+		litint->value = INTEGER_LIT;
+        //tok->setType(INTEGER_LIT);
+        //tok->setLiteral((int)atoi(str));
     }
     else
     {
-        tok->setType(REAL_LIT);
-        tok->setLiteral((float)atof(str));
+		litreal->value = REAL_LIT;
+        //tok->setType(REAL_LIT);
+        //tok->setLiteral((float)atof(str));
     }
 }
 void Scanner::getString(char *str, char *token_ptr, Token *tok)

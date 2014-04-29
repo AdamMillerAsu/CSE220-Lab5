@@ -2,24 +2,21 @@
 #include "common.h"
 #include "Token.h"
 
-template <class a_type> class LiteralType : Token
-{
-    
-    
-public:
-a_type getValue(a_type s)
-{
-	return s;
-}
+class LiteralType : Token
+{ 
 
- 
 };
 
-class Literal_String : public LiteralType<string>
+class Literal_String :  LiteralType
 {};
+class Literal_Real : LiteralType
+{
+public:
+double value;
+};
 
-class Literal_Real : public LiteralType<double>
-{};
-
-class Literal_Int : public LiteralType<int>
-{};
+class Literal_Int : LiteralType
+{
+public:
+int value;
+};
