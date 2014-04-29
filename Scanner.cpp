@@ -280,6 +280,7 @@ void Scanner::getNumber(char *str, char *token_ptr, Token *tok)
 }
 void Scanner::getString(char *str, char *token_ptr, Token *tok)
 {
+	Literal_String *litstr=new Literal_String();
     /*
      Write some code to Extract the string
      */
@@ -292,10 +293,14 @@ void Scanner::getString(char *str, char *token_ptr, Token *tok)
     }
     *token_ptr++ = *line_ptr++;
     *token_ptr = '\0';
-    tok->setCode(STRING);
-    tok->setType(STRING_LIT);
+    //tok->setCode(STRING);
+	
+    //tok->setType(STRING_LIT);
     string test(str);
     tok->setLiteral(test);
+	litstr->setLiteral(str);
+
+	tok=litstr;
 }
 void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
 {
