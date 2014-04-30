@@ -1,7 +1,7 @@
 all: program5
 
 program5: main.o Scanner.o Token.o Print.o LiteralType.o LineNumberList.o Identifier.o IdentifierBinaryTree.o
-		   g++ main.o Scanner.o Token.o Print.o LiteralType.o LineNumberList.o Identifier.o IdentifierBinaryTree.o
+		   g++ main.o Scanner.o Token.o Print.o LiteralType.o LineNumberList.o Identifier.o IdentifierBinaryTree.o -o program5
 main.o : main.cpp
 	g++ -c main.cpp
 		   
