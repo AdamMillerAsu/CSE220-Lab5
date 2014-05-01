@@ -9,8 +9,9 @@
 #define Lab4_Scanner_h
 
 #include "common.h"
-#include "Token.h"
 #include "Print.h"
+#include "LiteralType.h"
+#include "Identifier.h"
 
 #define CHAR_TABLE_SIZE 256
 
@@ -40,17 +41,23 @@ private:
     char getChar(char source_buffer[]);
     void skipBlanks(char source_buffer[]);
     void skipComment(char source_buffer[]);
-    void getWord(char *str, char *token_ptr, Token *tok);
-    void getNumber(char *str, char *token_ptr, Token *tok);
-    void getString(char *str, char *token_ptr, Token *tok);
-    void getSpecial(char *str, char *token_ptr, Token *tok);
+	template<class T>
+    void getWord(char *str, char *token_ptr, Literal<T> *lit);
+	template<class T>
+    void getNumber(char *str, char *token_ptr, Literal<T> *lit);
+	template<class T>
+    void getString(char *str, char *token_ptr, Literal<T> *lit);
+	template<class T>
+    void getSpecial(char *str, char *token_ptr, Literal<T> *lit);
     void downshiftWord(char word[]);
-    bool isReservedWord(char *str, Token *tok);
+	template<class T>
+    bool isReservedWord(char *str, Literal<string> *lit);
     
 public:
     Scanner(FILE *source_file, char source_name[], char date[], Print printer);
     ~Scanner();
-    Token* getToken();
+	template<class T>
+    Literal<T>* getToken();
     int getLineNumber();
 
 };
