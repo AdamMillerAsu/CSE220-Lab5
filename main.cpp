@@ -11,14 +11,17 @@
 #include "Scanner.h"
 #include "Token.h"
 #include "IdentifierBinaryTree.h"
+#include "LiteralType.h"
 
 FILE *init_lister(const char *name, char source_file_name[], char dte[]);
 void quit_scanner(FILE *src_file, Token *list);
 void add_token_to_list(Token *list, Token *new_token);
 
+template<class T>
 int main(int argc, const char * argv[])
 {
-    Token *token = NULL;
+    LiteralType<T> *lit = NULL;
+	Identifier *identifier = NULL;
     char source_name[MAX_FILE_NAME_LENGTH];
     char date[DATE_STRING_LENGTH];
     FILE *source_file = init_lister(argv[1], source_name, date);
@@ -28,21 +31,21 @@ int main(int argc, const char * argv[])
     
     do
     {
-        token = scanner.getToken();
-        print.printToken(token);
-        if (token->getCode() == IDENTIFIER)
+        lit = scanner.getToken();
+        print.printToken(lit);
+        if (lit->getCode() == IDENTIFIER)
         {
-            tree.addIdentifier(token, scanner.getLineNumber());
+            tree.addIdentifier(lit, scanner.getLineNumber());
         }
-        else if (token->getCode() != PERIOD && token->getCode() != END_OF_FILE)
+       if (lit->getCode() != PERIOD && token->getCode() != END_OF_FILE)
         {
-            delete token;
+            delete lit;
         }
     }
-    while (token->getCode() != PERIOD && token->getCode() != END_OF_FILE);
+    while (lit->getCode() != PERIOD && token->getCode() != END_OF_FILE);
     
     print.printTree(tree.getTreeRoot());
-    delete token;
+    delete lit;
     fclose(source_file);
     return 0;
 }
