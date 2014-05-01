@@ -23,28 +23,12 @@ class Token
 {
 protected:
     TokenCode code;
-    union
-    {
-        int integer;
-        float real;
-        char *stringLiteral;
-    }
-    literal;
-    string tokenString;
     
 public:
     Token();
     ~Token();
     void setCode(TokenCode newCode);
     TokenCode getCode();
-    void setLiteral(int newInteger);
-    int getIntLiteral();
-    void setLiteral(float newReal);
-    float getRealLiteral();
-    void setLiteral(string newString);
-    string getStringLiteral();
-    void setTokenString(string s);
-    string getTokenString();
 };
 
 #endif /* defined(__Lab4__Token__) */
