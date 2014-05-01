@@ -6,7 +6,7 @@
 //
 
 #include "Scanner.h"
-#include "Print.h"
+
 
 typedef struct
 {
@@ -31,7 +31,7 @@ Scanner::Scanner(FILE *source_file, char source_name[], char date[], Print print
     src_file = source_file;
     strcpy(src_name, source_name);
     strcpy(todays_date, date);
-    line_ptr=NULL;
+    
     /*******************
      initialize character table, this table is useful for identifying what type of character
      we are looking at by setting our array up to be a copy the ascii table.  Since C thinks of
@@ -79,14 +79,14 @@ bool Scanner::getSourceLine(char source_buffer[])
         return false;
     }
 }
-Token* Scanner::getToken()
+template<class T>
+Literal<T>* Scanner::getToken()
 {
     char ch = '\0'; //This can be the current character you are examining during scanning.
     char token_string[MAX_TOKEN_STRING_LENGTH] = {'\0'}; //Store your token here as you build it.
     char *token_ptr = token_string; //write some code to point this to the beginning of token_string
-    Token *new_token = new Token();
+	Literal<T> *new_literal;
     
-    new_token->setType(NO_TYPE);
     //1.  Skip past all of the blanks
     if (line_ptr == NULL)
     {
@@ -99,23 +99,33 @@ Token* Scanner::getToken()
     switch (char_table[ch])
     {//3.  Call the appropriate function to deal with the cases in 2.
         case LETTER:
-            getWord(token_string, token_ptr, new_token);
+			{
+            getWord(token_string, token_ptr, new_literal);
             break;
+			}
         case DIGIT:
-            getNumber(token_string, token_ptr, new_token);
+			{
+            getNumber(token_string, token_ptr, new_literal);
             break;
+			}
         case QUOTE:
-            getString(token_string, token_ptr, new_token);
+			{
+            getString(token_string, token_ptr, new_literal);
             break;
+			}
         case EOF_CODE:
-            new_token->setCode(END_OF_FILE);
+            {
+			new_literal->setCode(END_OF_FILE);
             break;
+			}
         default:
-            getSpecial(token_string, token_ptr, new_token);
+			{
+            getSpecial(token_string, token_ptr, new_literal);
             break;
+			}
     }
     
-    return new_token; //What should be returned here?
+    return new_literal; //What should be returned here?
 }
 char Scanner::getChar(char source_buffer[])
 {
@@ -175,12 +185,14 @@ void Scanner::skipComment(char source_buffer[])
     }
     while ((ch != '}') && (ch != EOF_CHAR));
 }
-void Scanner::getWord(char *str, char *token_ptr, Token *tok)
+template<class T>
+void Scanner::getWord(char *str, char *token_ptr, Literal<T> *lit)
 {
     /*
      Write some code to Extract the word
      */
     char ch = *line_ptr;
+	Literal<string> temp(string(str));
     while ((char_table[ch] == LETTER) || (char_table[ch] == DIGIT))
     {
         *token_ptr++ = *line_ptr++;
@@ -195,14 +207,15 @@ void Scanner::getWord(char *str, char *token_ptr, Token *tok)
      Write some code to Check if the word is a reserved word.
      if it is not a reserved word its an identifier.
      */
-    if (!isReservedWord(str, tok))
+    if (!isReservedWord(str, temp))
     {
         //set token to identifier
-        tok->setCode(IDENTIFIER);
+        temp->setCode = IDENTIFIER;
     }
-    tok->setTokenString(string(str));
+    lit = temp;
 }
-void Scanner::getNumber(char *str, char *token_ptr, Token *tok)
+template<class T>
+void Scanner::getNumber(char *str, char *token_ptr, Literal<T> *lit)
 {
     /*
      Write some code to Extract the number and convert it to a literal number.
@@ -258,19 +271,20 @@ void Scanner::getNumber(char *str, char *token_ptr, Token *tok)
         while (char_table[ch] == DIGIT);
     }
     *token_ptr = '\0';
-    tok->setCode(NUMBER);
+    lit->setCode(NUMBER);
     if (int_type)
     {
-        tok->setType(INTEGER_LIT);
-        tok->setLiteral((int)atoi(str));
+		lit = Literal<int>;
+        lit->setLiteral((int)atoi(str));
     }
     else
     {
-        tok->setType(REAL_LIT);
-        tok->setLiteral((float)atof(str));
+        lit = Literal<float>;
+        lit->setLiteral((float)atof(str));
     }
 }
-void Scanner::getString(char *str, char *token_ptr, Token *tok)
+template<class T>
+void Scanner::getString(char *str, char *token_ptr, Literal<T> *lit)
 {
     /*
      Write some code to Extract the string
@@ -284,12 +298,13 @@ void Scanner::getString(char *str, char *token_ptr, Token *tok)
     }
     *token_ptr++ = *line_ptr++;
     *token_ptr = '\0';
-    tok->setCode(STRING);
-    tok->setType(STRING_LIT);
+    lit->setCode(STRING);
+	lit = Literal<string>
     string test(str);
-    tok->setLiteral(test);
+    lit = Literal<string> *new_lit(test);
 }
-void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
+template<class T>
+void Scanner::getSpecial(char *str, char *token_ptr, Literal<T> *lit)
 {
     /*
      Write some code to Extract the special token.  Most are single-character
@@ -297,66 +312,67 @@ void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
      */
     char ch = *line_ptr;
     *token_ptr = ch;
+	Literal<string> temp(string(str));
     
     switch (ch)
     {
         case '^':
-            tok->setCode(UPARROW);
+            temp->setCode(UPARROW);
             token_ptr++;
             line_ptr++;
             break;
         case '*':
-            tok->setCode(STAR);
+            temp->setCode(STAR);
             token_ptr++;
             line_ptr++;
             break;
         case '(':
-            tok->setCode(LPAREN);
+            temp->setCode(LPAREN);
             token_ptr++;
             line_ptr++;
             break;
         case ')':
-            tok->setCode(RPAREN);
+            temp->setCode(RPAREN);
             token_ptr++;
             line_ptr++;
             break;
         case '-':
-            tok->setCode(MINUS);
+            temp->setCode(MINUS);
             token_ptr++;
             line_ptr++;
             break;
         case '+':
-            tok->setCode(PLUS);
+            temp->setCode(PLUS);
             token_ptr++;
             line_ptr++;
             break;
         case '=':
-            tok->setCode(EQUAL);
+            temp->setCode(EQUAL);
             token_ptr++;
             line_ptr++;
             break;
         case '[':
-            tok->setCode(LBRACKET);
+            temp->setCode(LBRACKET);
             token_ptr++;
             line_ptr++;
             break;
         case ']':
-            tok->setCode(RBRACKET);
+            temp->setCode(RBRACKET);
             token_ptr++;
             line_ptr++;
             break;
         case ';':
-            tok->setCode(SEMICOLON);
+            temp->setCode(SEMICOLON);
             token_ptr++;
             line_ptr++;
             break;
         case ',':
-            tok->setCode(COMMA);
+            temp->setCode(COMMA);
             token_ptr++;
             line_ptr++;
             break;
         case '/':
-            tok->setCode(SLASH);
+            temp->setCode(SLASH);
             token_ptr++;
             line_ptr++;
             break;
@@ -366,13 +382,13 @@ void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
             if (ch == '=')
             {
                 *token_ptr = '=';
-                tok->setCode(COLONEQUAL);
+                temp->setCode(COLONEQUAL);
                 token_ptr++;
                 line_ptr++;
             }
             else
             {
-                tok->setCode(COLON);
+                temp->setCode(COLON);
             }
             break;
         case '<':
@@ -381,20 +397,20 @@ void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
             if (ch == '=')
             {
                 *token_ptr = '=';
-                tok->setCode(LE);
+                temp->setCode(LE);
                 token_ptr++;
                 line_ptr++;
             }
             else if (ch == '>')
             {
                 *token_ptr = '>';
-                tok->setCode(NE);
+                temp->setCode(NE);
                 token_ptr++;
                 line_ptr++;
             }
             else
             {
-                tok->setCode(LT);
+                temp->setCode(LT);
             }
             break;
         case '>':
@@ -403,13 +419,13 @@ void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
             if (ch == '=')
             {
                 *token_ptr = '=';
-                tok->setCode(GE);
+                temp->setCode(GE);
                 token_ptr++;
                 line_ptr++;
             }
             else
             {
-                tok->setCode(GT);
+                temp->setCode(GT);
             }
             break;
         case '.':
@@ -418,23 +434,23 @@ void Scanner::getSpecial(char *str, char *token_ptr, Token *tok)
             if (ch == '=')
             {
                 *token_ptr = '.';
-                tok->setCode(DOTDOT);
+                temp->setCode(DOTDOT);
                 token_ptr++;
                 line_ptr++;
             }
             else
             {
-                tok->setCode(PERIOD);
+                temp->setCode(PERIOD);
             }
             break;
         default:
-            tok->setCode(ERROR);
+            temp->setCode(ERROR);
             token_ptr++;
             line_ptr++;
             break;
     }
     *token_ptr = '\0';
-    tok->setTokenString(string(str));
+    lit = temp;
 }
 void Scanner::downshiftWord(char word[])
 {
@@ -448,7 +464,9 @@ void Scanner::downshiftWord(char word[])
         word[index] = tolower(word[index]);
     }
 }
-bool Scanner::isReservedWord(char *str, Token *tok)
+
+template<class T>
+bool Scanner::isReservedWord(char *str, Literal<string> *lit)
 {
     /*
      Examine the reserved word table and determine if the function input is a reserved word.
@@ -464,7 +482,7 @@ bool Scanner::isReservedWord(char *str, Token *tok)
             rw = rw_table[str_len - 2][i];
             if (strcmp(str, rw.string) == 0)
             {
-                tok->setCode(rw.token_code);
+                lit->setCode(rw.token_code);
                 return true;
             }
         }
