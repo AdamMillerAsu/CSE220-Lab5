@@ -1,22 +1,20 @@
 //
+
+#ifndef __Lab5__Literal__
+#define __Lab5__Literal__
+
 #include "common.h"
 #include "Token.h"
 
-class LiteralType : public Token
+template<typename T>
+class Literal : public Token
 { 
-
-};
-
-class Literal_String : public LiteralType
-{};
-class Literal_Real : public LiteralType
-{
+protected:
+	T data;
 public:
-double value;
+	Literal(T data);
+	~Literal();
+	T getLiteral();
+	setLiteral(T data);
 };
-
-class Literal_Int : public LiteralType
-{
-public:
-int value;
-};
+#endif

@@ -9,8 +9,11 @@
 #define __Lab4__Print__
 
 #include <iostream>
+#include "Identifier.h"
+#include "IdentifierBinaryTree.h"
 #include "common.h"
 #include "Token.h"
+#include "LiteralType.h"
 
 using namespace std;
 
@@ -29,10 +32,11 @@ public:
     ~Print();
     
     void printLine(char line[]);
-    void printToken(Token *token);
+	template<class T>
+    void printToken(Literal<T> *lit);
     int getLineCount();
-    void printTree(Token *identifier);
-    void printTreeRecursive(Token *identifier);
+    void printTree(Identifier *identifier);
+    void printTreeRecursive(Identifier *identifier);
 };
 
 #endif /* defined(__Lab4__Print__) */

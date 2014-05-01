@@ -11,7 +11,11 @@
 #define __Lab4__IdentifierBinaryTree__
 
 #include <iostream>
+#include "common.h"
+#include "Token.h"
 #include "Identifier.h"
+#include "LineNumberList.h"
+#include "LiteralType.h"
 
 class IdentifierBinaryTree
 {
@@ -24,7 +28,8 @@ public:
     ~IdentifierBinaryTree();
     void setTreeRoot(Identifier *root);
     Identifier *getTreeRoot();
-    bool addIdentifier(Identifier *id, int lineNum);
+	template<class T = string>
+    bool addIdentifier(Literal<T> *lit, int lineNum);
 };
 
 #endif /* defined(__Lab4__IdentifierBinaryTree__) */

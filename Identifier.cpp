@@ -1,6 +1,8 @@
 #include "Identifier.h"
+
 Identifier::Identifier()
 {
+	this->setCode(IDENTIFIER);
 	setLeftChild(NULL);
     setRightChild(NULL);
 	list = NULL;
@@ -17,7 +19,6 @@ Identifier::~Identifier()
         delete root;
         root = tmp;
     }
-        free(this->literal.stringLiteral);
 }
 void Identifier::setLeftChild(Identifier *id)
 {
@@ -51,6 +52,14 @@ void Identifier::addToLineNumberList(LineNumberList *listItem)
         }
         tmp->setNextLineNumber(listItem);
 	}
+}
+void Identifier::setTokenString(string s)
+{
+	this->tokenString = s;
+}
+string Identifier::getTokenString()
+{
+	return tokenString;
 }
 LineNumberList *Identifier::getLineNumberList()
 {

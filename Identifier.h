@@ -15,8 +15,7 @@ using namespace std;
 class Identifier: public Token
 {
 private:
-    literal;
-    string tokenString;
+	string tokenString;
     Identifier *leftChild;
     Identifier *rightChild;
     LineNumberList *list;
@@ -29,6 +28,8 @@ public:
     void setRightChild(Identifier *id);
     Identifier *getRightChild();
     void addToLineNumberList(LineNumberList *listItem);
+	void setTokenString(string s);
+	string getTokenString();
     LineNumberList *getLineNumberList();
 };
 

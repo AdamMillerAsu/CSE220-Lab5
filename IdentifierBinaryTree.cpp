@@ -7,6 +7,8 @@
 //	Added to by Daniel Wong and Adam Miller
 //
 
+#include "LiteralType.h"
+#include "Identifier.h"
 #include "IdentifierBinaryTree.h"
 #include "LineNumberList.h"
 
@@ -46,10 +48,13 @@ Identifier *IdentifierBinaryTree::getTreeRoot()
 {
     return this->treeRoot;
 }
-bool IdentifierBinaryTree::addIdentifier(Identifier *id, int lineNum)
+
+template<class T = string>
+bool IdentifierBinaryTree::addIdentifier(template<T> *lit, int lineNum)
 {
     bool success = false;
     LineNumberList *listItem = new LineNumberList();
+	Identifier *id = new Identifier();
     
     listItem->setLineNumber(lineNum);
     if (getTreeRoot() == NULL)
@@ -60,7 +65,7 @@ bool IdentifierBinaryTree::addIdentifier(Identifier *id, int lineNum)
     }
     else
     {
-        string tokenName = id->getTokenString();
+        string tokenName = lit->getLiteral();
         Identifier *parentNode = getTreeRoot();
         string treeNodeName;
         int stringComparison;
