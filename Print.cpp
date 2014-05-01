@@ -62,7 +62,9 @@ void Print::printPageHeader()
     putchar(FORM_FEED_CHAR);
     printf("Page    %d  %s  %s\n\n", ++pageNumber, sourceFileName.c_str(), currentDate.c_str());
 }
-void Print::printToken(Token *token)
+
+template<class T>
+void Print::printToken(Literal<T> *lit)
 {
     char line[MAX_SOURCE_LINE_LENGTH + 32];
     const char *symbol_string = SYMBOL_STRINGS[token->getCode()];
@@ -70,20 +72,20 @@ void Print::printToken(Token *token)
     switch (token->getCode())
     {
         case NUMBER:
-            if (token->getType() == INTEGER_LIT)
+            if (T == int)
             {
-                sprintf(line, "    >> %-16s %d (integer)\n", symbol_string, token->getIntLiteral());
+                sprintf(line, "    >> %-16s %d (integer)\n", symbol_string, lit->getLiteral());
             }
             else
             {
-                sprintf(line, "    >> %-16s %g (real)\n", symbol_string, token->getRealLiteral());
+                sprintf(line, "    >> %-16s %g (real)\n", symbol_string, lit->getLiteral());
             }
             break;
         case STRING:
-            sprintf(line, "    >> %-16s %-s\n", symbol_string, token->getStringLiteral().c_str());
+            sprintf(line, "    >> %-16s %-s\n", symbol_string, lit->Literal().c_str());
             break;
         default:
-            sprintf(line, "    >> %-16s %-s\n", symbol_string, token->getTokenString().c_str());
+            sprintf(line, "    >> %-16s %-s\n", symbol_string, lit->getLiteral().c_str());
             break;
     }
     printLine(line);
@@ -92,7 +94,7 @@ int Print::getLineCount()
 {
     return this->lineCount;
 }
-void Print::printTreeRecursive(Token *identifier)
+void Print::printTreeRecursive(Identifier *identifier)
 {
     char line[MAX_SOURCE_LINE_LENGTH + 32];
     
@@ -115,7 +117,7 @@ void Print::printTreeRecursive(Token *identifier)
         printTreeRecursive(identifier->getRightChild());
     }
 }
-void Print::printTree(Token *identifier)
+void Print::printTree(Identifier *identifier)
 {
     cout << "\n Cross Reference Information\n";
     cout << " Identifier \t\tLine Numbers\n";
